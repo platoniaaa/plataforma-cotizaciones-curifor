@@ -711,10 +711,10 @@
 
     var html = '<div class="card" style="margin-bottom:20px;">' +
       '<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">' +
-      '<div style="flex:1;min-width:200px;"><label class="form-label">Buscar</label><input type="text" id="cot-filter-busqueda" class="form-input" placeholder="Cliente, numero o RUT..." value="' + escapeHtml(cotizacionesFilter.busqueda) + '"></div>' +
-      '<div style="min-width:150px;"><label class="form-label">Estado</label><select id="cot-filter-estado" class="form-input"><option value="">Todos</option><option value="borrador"' + (cotizacionesFilter.estado === 'borrador' ? ' selected' : '') + '>Borrador</option><option value="pendiente"' + (cotizacionesFilter.estado === 'pendiente' ? ' selected' : '') + '>Pendiente</option><option value="aprobada"' + (cotizacionesFilter.estado === 'aprobada' ? ' selected' : '') + '>Aprobada</option><option value="rechazada"' + (cotizacionesFilter.estado === 'rechazada' ? ' selected' : '') + '>Rechazada</option><option value="enviada"' + (cotizacionesFilter.estado === 'enviada' ? ' selected' : '') + '>Enviada</option><option value="vencida"' + (cotizacionesFilter.estado === 'vencida' ? ' selected' : '') + '>Vencida</option></select></div>' +
-      '<div style="min-width:140px;"><label class="form-label">Desde</label><input type="date" id="cot-filter-desde" class="form-input" value="' + cotizacionesFilter.desde + '"></div>' +
-      '<div style="min-width:140px;"><label class="form-label">Hasta</label><input type="date" id="cot-filter-hasta" class="form-input" value="' + cotizacionesFilter.hasta + '"></div>' +
+      '<div style="flex:1;min-width:200px;"><label class="form-label">Buscar</label><input type="text" id="cot-filter-busqueda" class="form-control" placeholder="Cliente, numero o RUT..." value="' + escapeHtml(cotizacionesFilter.busqueda) + '"></div>' +
+      '<div style="min-width:150px;"><label class="form-label">Estado</label><select id="cot-filter-estado" class="form-control"><option value="">Todos</option><option value="borrador"' + (cotizacionesFilter.estado === 'borrador' ? ' selected' : '') + '>Borrador</option><option value="pendiente"' + (cotizacionesFilter.estado === 'pendiente' ? ' selected' : '') + '>Pendiente</option><option value="aprobada"' + (cotizacionesFilter.estado === 'aprobada' ? ' selected' : '') + '>Aprobada</option><option value="rechazada"' + (cotizacionesFilter.estado === 'rechazada' ? ' selected' : '') + '>Rechazada</option><option value="enviada"' + (cotizacionesFilter.estado === 'enviada' ? ' selected' : '') + '>Enviada</option><option value="vencida"' + (cotizacionesFilter.estado === 'vencida' ? ' selected' : '') + '>Vencida</option></select></div>' +
+      '<div style="min-width:140px;"><label class="form-label">Desde</label><input type="date" id="cot-filter-desde" class="form-control" value="' + cotizacionesFilter.desde + '"></div>' +
+      '<div style="min-width:140px;"><label class="form-label">Hasta</label><input type="date" id="cot-filter-hasta" class="form-control" value="' + cotizacionesFilter.hasta + '"></div>' +
       '<div><button class="btn btn-primary" onclick="window.CuriforApp.applyCotizacionesFilter()">Filtrar</button></div>' +
       '<div><button class="btn btn-outline" onclick="window.CuriforApp.clearCotizacionesFilter()">Limpiar</button></div>' +
       '</div></div>';
@@ -905,14 +905,14 @@
   function renderWizardStep1() {
     return '<h3 style="margin:0 0 20px;font-size:16px;color:#1e293b;">Datos del Cliente</h3>' +
       '<div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">' +
-      '<div><label class="form-label">Nombre / Razón Social *</label><input type="text" id="wz-cliente-nombre" class="form-input" value="' + escapeHtml(clienteData.nombre || '') + '" placeholder="Nombre del cliente"></div>' +
-      '<div><label class="form-label">RUT</label><input type="text" id="wz-cliente-rut" class="form-input" value="' + escapeHtml(clienteData.rut || '') + '" placeholder="12.345.678-9"></div>' +
-      '<div><label class="form-label">Email</label><input type="email" id="wz-cliente-email" class="form-input" value="' + escapeHtml(clienteData.email || '') + '" placeholder="cliente@empresa.cl"></div>' +
-      '<div><label class="form-label">Teléfono</label><input type="text" id="wz-cliente-telefono" class="form-input" value="' + escapeHtml(clienteData.telefono || '') + '" placeholder="+56 9 1234 5678"></div>' +
-      '<div style="grid-column:1/-1;"><label class="form-label">Dirección</label><input type="text" id="wz-cliente-direccion" class="form-input" value="' + escapeHtml(clienteData.direccion || '') + '" placeholder="Dirección del cliente"></div>' +
-      '<div><label class="form-label">Ciudad</label><input type="text" id="wz-cliente-ciudad" class="form-input" value="' + escapeHtml(clienteData.ciudad || '') + '" placeholder="Ciudad"></div>' +
-      '<div><label class="form-label">Comuna</label><input type="text" id="wz-cliente-comuna" class="form-input" value="' + escapeHtml(clienteData.comuna || '') + '" placeholder="Comuna"></div>' +
-      '<div><label class="form-label">Giro</label><input type="text" id="wz-cliente-giro" class="form-input" value="' + escapeHtml(clienteData.giro || '') + '" placeholder="Giro comercial"></div>' +
+      '<div><label class="form-label">Nombre / Razón Social *</label><input type="text" id="wz-cliente-nombre" class="form-control" value="' + escapeHtml(clienteData.nombre || '') + '" placeholder="Nombre del cliente"></div>' +
+      '<div><label class="form-label">RUT</label><input type="text" id="wz-cliente-rut" class="form-control" value="' + escapeHtml(clienteData.rut || '') + '" placeholder="12.345.678-9"></div>' +
+      '<div><label class="form-label">Email</label><input type="email" id="wz-cliente-email" class="form-control" value="' + escapeHtml(clienteData.email || '') + '" placeholder="cliente@empresa.cl"></div>' +
+      '<div><label class="form-label">Teléfono</label><input type="text" id="wz-cliente-telefono" class="form-control" value="' + escapeHtml(clienteData.telefono || '') + '" placeholder="+56 9 1234 5678"></div>' +
+      '<div style="grid-column:1/-1;"><label class="form-label">Dirección</label><input type="text" id="wz-cliente-direccion" class="form-control" value="' + escapeHtml(clienteData.direccion || '') + '" placeholder="Dirección del cliente"></div>' +
+      '<div><label class="form-label">Ciudad</label><input type="text" id="wz-cliente-ciudad" class="form-control" value="' + escapeHtml(clienteData.ciudad || '') + '" placeholder="Ciudad"></div>' +
+      '<div><label class="form-label">Comuna</label><input type="text" id="wz-cliente-comuna" class="form-control" value="' + escapeHtml(clienteData.comuna || '') + '" placeholder="Comuna"></div>' +
+      '<div><label class="form-label">Giro</label><input type="text" id="wz-cliente-giro" class="form-control" value="' + escapeHtml(clienteData.giro || '') + '" placeholder="Giro comercial"></div>' +
       '</div>';
   }
 
@@ -925,7 +925,7 @@
     // Product search
     html += '<div style="position:relative;margin-bottom:20px;">' +
       '<label class="form-label">Buscar Producto (codigo o nombre)</label>' +
-      '<input type="text" id="wz-product-search" class="form-input" placeholder="Escriba para buscar..." autocomplete="off">' +
+      '<input type="text" id="wz-product-search" class="form-control" placeholder="Escriba para buscar..." autocomplete="off">' +
       '<div id="wz-product-results" style="position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid #e2e8f0;border-radius:8px;max-height:300px;overflow-y:auto;display:none;box-shadow:0 10px 30px rgba(0,0,0,0.12);"></div>';
     if (!productsLoaded) {
       html += '<div style="font-size:12px;color:#f59e0b;margin-top:4px;">Cargando catalogo de productos...</div>';
@@ -941,14 +941,14 @@
       html += '<h4 style="margin:0 0 16px;font-size:15px;color:#1e293b;display:flex;align-items:center;gap:8px;">🏷️ Descuento (Opcional)</h4>';
       html += '<div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;align-items:end;">' +
         '<div><label class="form-label" style="font-size:12px;">Tipo</label>' +
-        '<select id="wz-desc-tipo" class="form-input" style="padding:8px 10px;" onchange="window.CuriforApp.updateDescuentoPreview()">' +
+        '<select id="wz-desc-tipo" class="form-control" style="padding:8px 10px;" onchange="window.CuriforApp.updateDescuentoPreview()">' +
         '<option value="porcentaje"' + (descuentoData.tipo === 'porcentaje' ? ' selected' : '') + '>Porcentaje (%)</option>' +
         '<option value="monto_fijo"' + (descuentoData.tipo === 'monto_fijo' ? ' selected' : '') + '>Monto Fijo ($)</option>' +
         '</select></div>' +
         '<div><label class="form-label" style="font-size:12px;">Valor <span style="color:#94a3b8;">(máx ' + config.descuento_maximo + '%)</span></label>' +
-        '<input type="number" id="wz-desc-valor" class="form-input" style="padding:8px 10px;" value="' + (descuentoData.valor || '') + '" min="0" placeholder="0" oninput="window.CuriforApp.updateDescuentoPreview()"></div>' +
+        '<input type="number" id="wz-desc-valor" class="form-control" style="padding:8px 10px;" value="' + (descuentoData.valor || '') + '" min="0" placeholder="0" oninput="window.CuriforApp.updateDescuentoPreview()"></div>' +
         '<div><label class="form-label" style="font-size:12px;">Justificación</label>' +
-        '<input type="text" id="wz-desc-justificacion" class="form-input" style="padding:8px 10px;" value="' + escapeHtml(descuentoData.justificacion || '') + '" placeholder="Motivo del descuento..."></div>' +
+        '<input type="text" id="wz-desc-justificacion" class="form-control" style="padding:8px 10px;" value="' + escapeHtml(descuentoData.justificacion || '') + '" placeholder="Motivo del descuento..."></div>' +
         '</div>';
 
       // Totals preview
@@ -993,16 +993,16 @@
     var html = '<h3 style="margin:0 0 20px;font-size:16px;color:#1e293b;">Descuento (Opcional)</h3>';
     html += '<div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">' +
       '<div><label class="form-label">Tipo de Descuento</label>' +
-      '<select id="wz-desc-tipo" class="form-input" onchange="window.CuriforApp.updateDescuentoPreview()">' +
+      '<select id="wz-desc-tipo" class="form-control" onchange="window.CuriforApp.updateDescuentoPreview()">' +
       '<option value="porcentaje"' + (descuentoData.tipo === 'porcentaje' ? ' selected' : '') + '>Porcentaje (%)</option>' +
       '<option value="monto_fijo"' + (descuentoData.tipo === 'monto_fijo' ? ' selected' : '') + '>Monto Fijo ($)</option>' +
       '</select></div>' +
       '<div><label class="form-label">Valor</label>' +
-      '<input type="number" id="wz-desc-valor" class="form-input" value="' + (descuentoData.valor || '') + '" min="0" placeholder="0" onchange="window.CuriforApp.updateDescuentoPreview()" oninput="window.CuriforApp.updateDescuentoPreview()">' +
+      '<input type="number" id="wz-desc-valor" class="form-control" value="' + (descuentoData.valor || '') + '" min="0" placeholder="0" onchange="window.CuriforApp.updateDescuentoPreview()" oninput="window.CuriforApp.updateDescuentoPreview()">' +
       '<div style="font-size:12px;color:#64748b;margin-top:4px;">Descuento maximo permitido: ' + config.descuento_maximo + '%</div></div>' +
       '</div>';
     html += '<div style="margin-top:16px;"><label class="form-label">Justificacion (requerida si aplica descuento)</label>' +
-      '<textarea id="wz-desc-justificacion" class="form-input" rows="3" placeholder="Motivo del descuento...">' + escapeHtml(descuentoData.justificacion || '') + '</textarea></div>';
+      '<textarea id="wz-desc-justificacion" class="form-control" rows="3" placeholder="Motivo del descuento...">' + escapeHtml(descuentoData.justificacion || '') + '</textarea></div>';
 
     html += '<div id="wz-desc-preview" style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:8px;">';
     html += calculateDescuentoPreviewHtml(subtotal);
@@ -1767,7 +1767,7 @@
 
   function rechazarCotizacionModal(id) {
     var content = '<div><label class="form-label">Motivo del rechazo *</label>' +
-      '<textarea id="modal-motivo-rechazo" class="form-input" rows="4" placeholder="Ingrese el motivo del rechazo..."></textarea></div>';
+      '<textarea id="modal-motivo-rechazo" class="form-control" rows="4" placeholder="Ingrese el motivo del rechazo..."></textarea></div>';
     var footer = '<button class="btn btn-outline" onclick="window.CuriforApp.closeModal()">Cancelar</button>' +
       '<button class="btn" style="background:#ef4444;color:#fff;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-weight:600;" onclick="window.CuriforApp.rechazarCotizacion(' + id + ')">Rechazar</button>';
     showModal('Rechazar Cotizacion', content, footer);
@@ -1814,7 +1814,7 @@
       '<h3 style="margin:0;font-size:16px;color:#1e293b;">Catalogo de Productos</h3>' +
       '<div id="products-count-badge" style="font-size:13px;color:#64748b;">' + (productsLoaded ? allProducts.length.toLocaleString('es-CL') + ' productos cargados' : 'Cargando...') + '</div></div>';
 
-    html += '<div style="margin-bottom:16px;"><input type="text" id="productos-search" class="form-input" placeholder="Buscar por codigo o nombre..." value="' + escapeHtml(productosSearch) + '" style="max-width:400px;"></div>';
+    html += '<div style="margin-bottom:16px;"><input type="text" id="productos-search" class="form-control" placeholder="Buscar por codigo o nombre..." value="' + escapeHtml(productosSearch) + '" style="max-width:400px;"></div>';
 
     if (!productsLoaded) {
       html += '<div id="products-loading" style="text-align:center;padding:40px;color:#64748b;"><div style="margin-bottom:10px;">Cargando catalogo de productos...</div><div style="font-size:13px;">Esto puede tomar unos segundos.</div></div>';
@@ -1934,14 +1934,14 @@
     }).join('');
 
     var content = '<div style="display:flex;flex-direction:column;gap:14px;">' +
-      '<div><label class="form-label">Nombre *</label><input type="text" id="modal-user-nombre" class="form-input" value="' + escapeHtml(user ? user.nombre : '') + '"></div>' +
-      '<div><label class="form-label">Email *</label><input type="email" id="modal-user-email" class="form-input" value="' + escapeHtml(user ? user.email : '') + '"></div>' +
-      '<div><label class="form-label">Contrasena *</label><input type="text" id="modal-user-password" class="form-input" value="' + escapeHtml(user ? user.password : '') + '"></div>' +
-      '<div><label class="form-label">Rol *</label><select id="modal-user-rol" class="form-input">' +
+      '<div><label class="form-label">Nombre *</label><input type="text" id="modal-user-nombre" class="form-control" value="' + escapeHtml(user ? user.nombre : '') + '"></div>' +
+      '<div><label class="form-label">Email *</label><input type="email" id="modal-user-email" class="form-control" value="' + escapeHtml(user ? user.email : '') + '"></div>' +
+      '<div><label class="form-label">Contrasena *</label><input type="text" id="modal-user-password" class="form-control" value="' + escapeHtml(user ? user.password : '') + '"></div>' +
+      '<div><label class="form-label">Rol *</label><select id="modal-user-rol" class="form-control">' +
       '<option value="vendedor"' + (user && user.rol === 'vendedor' ? ' selected' : '') + '>Vendedor</option>' +
       '<option value="gerente"' + (user && user.rol === 'gerente' ? ' selected' : '') + '>Gerente</option>' +
       '<option value="admin"' + (user && user.rol === 'admin' ? ' selected' : '') + '>Administrador</option></select></div>' +
-      '<div><label class="form-label">Sucursal *</label><select id="modal-user-sucursal" class="form-input">' + sucOpts + '</select></div>' +
+      '<div><label class="form-label">Sucursal *</label><select id="modal-user-sucursal" class="form-control">' + sucOpts + '</select></div>' +
       '</div>';
 
     var footer = '<button class="btn btn-outline" onclick="window.CuriforApp.closeModal()">Cancelar</button>' +
@@ -2044,10 +2044,10 @@
   function showSucursalModal(id) {
     var suc = id ? getSucursalById(id) : null;
     var content = '<div style="display:flex;flex-direction:column;gap:14px;">' +
-      '<div><label class="form-label">Nombre *</label><input type="text" id="modal-suc-nombre" class="form-input" value="' + escapeHtml(suc ? suc.nombre : '') + '"></div>' +
-      '<div><label class="form-label">Direccion *</label><input type="text" id="modal-suc-direccion" class="form-input" value="' + escapeHtml(suc ? suc.direccion : '') + '"></div>' +
-      '<div><label class="form-label">Telefono</label><input type="text" id="modal-suc-telefono" class="form-input" value="' + escapeHtml(suc ? suc.telefono : '') + '"></div>' +
-      '<div><label class="form-label">Email</label><input type="email" id="modal-suc-email" class="form-input" value="' + escapeHtml(suc ? suc.email : '') + '"></div>' +
+      '<div><label class="form-label">Nombre *</label><input type="text" id="modal-suc-nombre" class="form-control" value="' + escapeHtml(suc ? suc.nombre : '') + '"></div>' +
+      '<div><label class="form-label">Direccion *</label><input type="text" id="modal-suc-direccion" class="form-control" value="' + escapeHtml(suc ? suc.direccion : '') + '"></div>' +
+      '<div><label class="form-label">Telefono</label><input type="text" id="modal-suc-telefono" class="form-control" value="' + escapeHtml(suc ? suc.telefono : '') + '"></div>' +
+      '<div><label class="form-label">Email</label><input type="email" id="modal-suc-email" class="form-control" value="' + escapeHtml(suc ? suc.email : '') + '"></div>' +
       (suc ? '<div><label class="form-label"><input type="checkbox" id="modal-suc-activa"' + (suc.activa ? ' checked' : '') + '> Activa</label></div>' : '') +
       '</div>';
 
@@ -2109,11 +2109,11 @@
 
     var html = '<div class="card"><h3 style="margin:0 0 20px;font-size:16px;color:#1e293b;">Configuracion General</h3>' +
       '<div style="display:flex;flex-direction:column;gap:16px;max-width:600px;">' +
-      '<div><label class="form-label">Dias de validez de cotizacion</label><input type="number" id="cfg-validez" class="form-input" value="' + config.validez_dias + '" min="1" max="365"></div>' +
-      '<div><label class="form-label">Descuento maximo permitido (%)</label><input type="number" id="cfg-descuento" class="form-input" value="' + config.descuento_maximo + '" min="0" max="100"></div>' +
-      '<div><label class="form-label">Terminos y condiciones</label><textarea id="cfg-terminos" class="form-input" rows="4">' + escapeHtml(config.terminos) + '</textarea></div>' +
-      '<div><label class="form-label">Asunto del correo</label><input type="text" id="cfg-asunto" class="form-input" value="' + escapeHtml(config.correo_asunto) + '"><div style="font-size:12px;color:#64748b;margin-top:4px;">Variables: {NUMERO}</div></div>' +
-      '<div><label class="form-label">Cuerpo del correo</label><textarea id="cfg-cuerpo" class="form-input" rows="6">' + escapeHtml(config.correo_cuerpo) + '</textarea><div style="font-size:12px;color:#64748b;margin-top:4px;">Variables: {CLIENTE}, {VENDEDOR}, {NUMERO}</div></div>' +
+      '<div><label class="form-label">Dias de validez de cotizacion</label><input type="number" id="cfg-validez" class="form-control" value="' + config.validez_dias + '" min="1" max="365"></div>' +
+      '<div><label class="form-label">Descuento maximo permitido (%)</label><input type="number" id="cfg-descuento" class="form-control" value="' + config.descuento_maximo + '" min="0" max="100"></div>' +
+      '<div><label class="form-label">Terminos y condiciones</label><textarea id="cfg-terminos" class="form-control" rows="4">' + escapeHtml(config.terminos) + '</textarea></div>' +
+      '<div><label class="form-label">Asunto del correo</label><input type="text" id="cfg-asunto" class="form-control" value="' + escapeHtml(config.correo_asunto) + '"><div style="font-size:12px;color:#64748b;margin-top:4px;">Variables: {NUMERO}</div></div>' +
+      '<div><label class="form-label">Cuerpo del correo</label><textarea id="cfg-cuerpo" class="form-control" rows="6">' + escapeHtml(config.correo_cuerpo) + '</textarea><div style="font-size:12px;color:#64748b;margin-top:4px;">Variables: {CLIENTE}, {VENDEDOR}, {NUMERO}</div></div>' +
       '<div><button class="btn btn-primary" onclick="window.CuriforApp.saveConfig()">Guardar Configuracion</button></div>' +
       '</div></div>';
 
