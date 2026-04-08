@@ -1549,7 +1549,7 @@
                     <input type="password" id="login-password" placeholder="Tu contraseña" required>
                 </div>
                 <div id="login-error"></div>
-                <button type="submit" class="btn-login">Iniciar Sesión</button>
+                <button type="button" id="login-btn" class="btn-login">Iniciar Sesión</button>
             </form>
 
             <div class="login-hints">
@@ -1611,11 +1611,15 @@
                 <h1 id="page-title">Dashboard</h1>
             </div>
             <div class="navbar-right">
-                <button class="notification-btn" id="notification-btn" aria-label="Notificaciones">
-                    🔔
-                    <span class="notification-badge hidden" id="notification-count">0</span>
-                </button>
+                <div style="position:relative;">
+                    <button class="notification-btn" id="notification-btn" aria-label="Notificaciones">
+                        🔔
+                        <span class="notification-badge hidden" id="notification-count">0</span>
+                    </button>
+                    <div id="notification-dropdown" style="display:none;position:absolute;right:0;top:45px;width:360px;max-height:400px;overflow-y:auto;background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.15);z-index:9999;"></div>
+                </div>
                 <div class="user-info">
+                    <div id="user-avatar" style="width:34px;height:34px;border-radius:50%;background:#0047AB;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">US</div>
                     <span id="user-name">Usuario</span>
                     <span id="user-role-badge" class="badge">Rol</span>
                 </div>

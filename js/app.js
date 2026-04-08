@@ -387,10 +387,10 @@
   function checkSession() {
     var session = getSession();
     var loginScreen = document.getElementById('login-screen');
-    var appScreen = document.getElementById('app-screen');
+    var appScreen = document.getElementById('app-container');
     if (session) {
       if (loginScreen) loginScreen.style.display = 'none';
-      if (appScreen) appScreen.style.display = 'flex';
+      if (appScreen) appScreen.style.display = 'block';
       updateUserInfo();
       applyRoleVisibility();
       handleHashNavigation();
@@ -451,7 +451,7 @@
     var session = getSession();
     if (!session) return;
     var nameEl = document.getElementById('user-name');
-    var roleEl = document.getElementById('user-role');
+    var roleEl = document.getElementById('user-role-badge');
     var avatarEl = document.getElementById('user-avatar');
     if (nameEl) nameEl.textContent = session.nombre;
     if (roleEl) {
@@ -508,7 +508,7 @@
     if (target) target.style.display = 'block';
 
     // Update active sidebar link
-    var links = document.querySelectorAll('.nav-link');
+    var links = document.querySelectorAll('.sidebar-nav a[data-page]');
     for (var j = 0; j < links.length; j++) {
       links[j].classList.remove('active');
       if (links[j].getAttribute('data-page') === page) {
@@ -2144,7 +2144,7 @@
   // ---------------------------------------------------------------------------
   function updateNotificationBadge() {
     var count = getUnreadCount();
-    var badge = document.getElementById('notif-badge');
+    var badge = document.getElementById('notification-count');
     if (badge) {
       badge.textContent = count;
       badge.style.display = count > 0 ? 'flex' : 'none';
@@ -2157,7 +2157,7 @@
     var notifs = getNotificaciones().filter(function (n) { return n.usuario_id === session.id; });
     notifs.sort(function (a, b) { return new Date(b.fecha) - new Date(a.fecha); });
 
-    var dropdown = document.getElementById('notif-dropdown');
+    var dropdown = document.getElementById('notification-dropdown');
     if (!dropdown) return;
 
     if (dropdown.style.display === 'block') {
@@ -2214,7 +2214,7 @@
     updateNotificationBadge();
 
     // Close dropdown
-    var dropdown = document.getElementById('notif-dropdown');
+    var dropdown = document.getElementById('notification-dropdown');
     if (dropdown) dropdown.style.display = 'none';
 
     // Navigate if has cotizacion
@@ -2271,13 +2271,13 @@
     });
 
     // Notification bell
-    var notifBell = document.getElementById('notif-bell');
+    var notifBell = document.getElementById('notification-btn');
     if (notifBell) notifBell.addEventListener('click', renderNotifications);
 
     // Close notification dropdown when clicking outside
     document.addEventListener('click', function (e) {
-      var dropdown = document.getElementById('notif-dropdown');
-      var bell = document.getElementById('notif-bell');
+      var dropdown = document.getElementById('notification-dropdown');
+      var bell = document.getElementById('notification-btn');
       if (dropdown && dropdown.style.display === 'block' && e.target !== bell && !bell.contains(e.target) && !dropdown.contains(e.target)) {
         dropdown.style.display = 'none';
       }
