@@ -436,8 +436,11 @@
 
     if (errorEl) errorEl.style.display = 'none';
     setSession(found);
+    console.log('Login OK, user:', found.nombre);
     checkSession();
+    console.log('After checkSession, navigating to dashboard');
     navigateTo('dashboard');
+    console.log('After navigateTo dashboard');
   }
 
   function handleLogout() {
@@ -498,7 +501,7 @@
     currentPage = page;
 
     // Hide all page sections
-    var pages = document.querySelectorAll('[id^="page-"]');
+    var pages = document.querySelectorAll('#content > .page');
     for (var i = 0; i < pages.length; i++) {
       pages[i].style.display = 'none';
     }
@@ -579,8 +582,9 @@
   // Dashboard
   // ---------------------------------------------------------------------------
   function renderDashboard() {
+    console.log('renderDashboard called');
     var container = document.getElementById('page-dashboard');
-    if (!container) return;
+    if (!container) { console.error('page-dashboard not found!'); return; }
     var session = getSession();
     var cotizaciones = getCotizaciones();
 
@@ -2299,15 +2303,24 @@
   // DOMContentLoaded - App Entry Point
   // ---------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
+    try {
     initData();
+    console.log('initData OK');
     checkSession();
+    console.log('checkSession OK');
     loadProducts();
+    console.log('loadProducts started');
     setupEventListeners();
+    console.log('setupEventListeners OK');
 
     // Add CSS animation for toasts
     var style = document.createElement('style');
     style.textContent = '@keyframes slideInRight{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}';
     document.head.appendChild(style);
+    } catch(err) {
+      console.error('INIT ERROR:', err);
+      document.body.innerHTML = '<div style="padding:40px;color:red;font-size:18px;">Error: ' + err.message + '<br><pre>' + err.stack + '</pre></div>';
+    }
   });
 
   // ---------------------------------------------------------------------------
