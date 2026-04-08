@@ -917,9 +917,6 @@
   }
 
   function renderWizardStep2() {
-    var subtotal = cart.reduce(function (s, item) { return s + item.precio * item.cantidad; }, 0);
-    var config = getConfig();
-
     var html = '<h3 style="margin:0 0 20px;font-size:16px;color:#1e293b;">Agregar Productos</h3>';
 
     // Product search
@@ -932,30 +929,15 @@
     }
     html += '</div>';
 
-    // Cart table
+    // Cart table with discount column
     html += '<div id="wz-cart">' + renderCartHtml() + '</div>';
 
-    // Discount section (inline, below cart)
-    if (cart.length > 0) {
-      html += '<div style="margin-top:24px;padding:20px;background:#f0f4ff;border-radius:12px;border:1px solid #c7d2fe;">';
-      html += '<h4 style="margin:0 0 16px;font-size:15px;color:#1e293b;display:flex;align-items:center;gap:8px;">🏷️ Descuento (Opcional)</h4>';
-      html += '<div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;align-items:end;">' +
-        '<div><label class="form-label" style="font-size:12px;">Tipo</label>' +
-        '<select id="wz-desc-tipo" class="form-control" style="padding:8px 10px;" onchange="window.CuriforApp.updateDescuentoPreview()">' +
-        '<option value="porcentaje"' + (descuentoData.tipo === 'porcentaje' ? ' selected' : '') + '>Porcentaje (%)</option>' +
-        '<option value="monto_fijo"' + (descuentoData.tipo === 'monto_fijo' ? ' selected' : '') + '>Monto Fijo ($)</option>' +
-        '</select></div>' +
-        '<div><label class="form-label" style="font-size:12px;">Valor <span style="color:#94a3b8;">(máx ' + config.descuento_maximo + '%)</span></label>' +
-        '<input type="number" id="wz-desc-valor" class="form-control" style="padding:8px 10px;" value="' + (descuentoData.valor || '') + '" min="0" placeholder="0" oninput="window.CuriforApp.updateDescuentoPreview()"></div>' +
-        '<div><label class="form-label" style="font-size:12px;">Justificación</label>' +
-        '<input type="text" id="wz-desc-justificacion" class="form-control" style="padding:8px 10px;" value="' + escapeHtml(descuentoData.justificacion || '') + '" placeholder="Motivo del descuento..."></div>' +
+    // Justificación del descuento (solo si hay algún descuento aplicado)
+    if (cart.length > 0 && cart.some(function(item) { return (item.descuento || 0) > 0; })) {
+      html += '<div style="margin-top:16px;">' +
+        '<label class="form-label">Justificación del descuento (requerida)</label>' +
+        '<input type="text" id="wz-desc-justificacion" class="form-control" value="' + escapeHtml(descuentoData.justificacion || '') + '" placeholder="Motivo del descuento...">' +
         '</div>';
-
-      // Totals preview
-      html += '<div id="wz-desc-preview" style="margin-top:16px;padding:14px;background:#fff;border-radius:8px;">';
-      html += calculateDescuentoPreviewHtml(subtotal);
-      html += '</div>';
-      html += '</div>';
     }
 
     return html;
@@ -966,23 +948,43 @@
       return '<div style="text-align:center;padding:40px;color:#94a3b8;"><p>No hay productos agregados.</p><p style="font-size:13px;">Use el buscador para agregar productos.</p></div>';
     }
 
-    var subtotal = 0;
-    var html = '<div class="table-responsive"><table class="data-table"><thead><tr><th>Codigo</th><th>Producto</th><th>Precio Unit.</th><th style="width:120px;">Cantidad</th><th>Subtotal</th><th></th></tr></thead><tbody>';
+    var config = getConfig();
+    var subtotalBruto = 0;
+    var totalConDesc = 0;
+    var html = '<div class="table-responsive"><table class="data-table"><thead><tr>' +
+      '<th>Codigo</th><th>Producto</th><th style="text-align:right;">Precio Unit.</th>' +
+      '<th style="width:120px;text-align:center;">Cantidad</th>' +
+      '<th style="width:90px;text-align:center;">% Dct.</th>' +
+      '<th style="text-align:right;">Total</th><th></th></tr></thead><tbody>';
     cart.forEach(function (item, idx) {
-      var itemSubtotal = item.precio * item.cantidad;
-      subtotal += itemSubtotal;
-      html += '<tr><td>' + escapeHtml(String(item.codigo)) + '</td>' +
+      var itemBruto = item.precio * item.cantidad;
+      var desc = item.descuento || 0;
+      var itemTotal = Math.round(itemBruto * (1 - desc / 100));
+      subtotalBruto += itemBruto;
+      totalConDesc += itemTotal;
+      html += '<tr>' +
+        '<td>' + escapeHtml(String(item.codigo)) + '</td>' +
         '<td>' + escapeHtml(item.nombre) + '</td>' +
-        '<td>' + formatCLP(item.precio) + '</td>' +
-        '<td><div style="display:flex;align-items:center;gap:6px;">' +
+        '<td style="text-align:right;">' + formatCLP(item.precio) + '</td>' +
+        '<td><div style="display:flex;align-items:center;justify-content:center;gap:4px;">' +
         '<button class="btn btn-sm btn-outline" onclick="window.CuriforApp.updateQuantity(' + idx + ',-1)" style="padding:2px 8px;">-</button>' +
-        '<input type="number" value="' + item.cantidad + '" min="1" style="width:60px;text-align:center;padding:4px;border:1px solid #d1d5db;border-radius:6px;" onchange="window.CuriforApp.setQuantity(' + idx + ',this.value)">' +
+        '<input type="number" value="' + item.cantidad + '" min="1" style="width:50px;text-align:center;padding:4px;border:1px solid #d1d5db;border-radius:6px;" onchange="window.CuriforApp.setQuantity(' + idx + ',this.value)">' +
         '<button class="btn btn-sm btn-outline" onclick="window.CuriforApp.updateQuantity(' + idx + ',1)" style="padding:2px 8px;">+</button></div></td>' +
-        '<td>' + formatCLP(itemSubtotal) + '</td>' +
+        '<td><input type="number" value="' + desc + '" min="0" max="' + config.descuento_maximo + '" style="width:65px;text-align:center;padding:4px;border:1px solid #d1d5db;border-radius:6px;' + (desc > 0 ? 'background:#fef3c7;border-color:#f59e0b;' : '') + '" onchange="window.CuriforApp.setItemDiscount(' + idx + ',this.value)"></td>' +
+        '<td style="text-align:right;font-weight:600;' + (desc > 0 ? 'color:#10b981;' : '') + '">' + formatCLP(itemTotal) + '</td>' +
         '<td><button onclick="window.CuriforApp.removeFromCart(' + idx + ')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:18px;padding:4px;" title="Eliminar">&times;</button></td></tr>';
     });
     html += '</tbody></table></div>';
-    html += '<div style="text-align:right;margin-top:12px;font-size:18px;font-weight:700;color:#1e293b;">Subtotal: ' + formatCLP(subtotal) + '</div>';
+
+    // Totals
+    var hayDescuento = subtotalBruto !== totalConDesc;
+    html += '<div style="text-align:right;margin-top:16px;padding:12px 0;">';
+    if (hayDescuento) {
+      html += '<div style="font-size:14px;color:#6b7280;margin-bottom:4px;">Subtotal: ' + formatCLP(subtotalBruto) + '</div>';
+      html += '<div style="font-size:14px;color:#ef4444;margin-bottom:4px;">Descuento: -' + formatCLP(subtotalBruto - totalConDesc) + '</div>';
+    }
+    html += '<div style="font-size:20px;font-weight:700;color:#1e293b;">Total: ' + formatCLP(totalConDesc) + '</div>';
+    html += '</div>';
     return html;
   }
 
@@ -1085,26 +1087,35 @@
       '<div><strong>Valida hasta:</strong> ' + formatDate(fechaValidez.toISOString()) + '</div>' +
       '</div></div>';
 
-    // Products
+    // Products with per-line discount
+    var subtotalBruto = 0;
+    var totalConDesc = 0;
     html += '<div style="margin-bottom:16px;">' +
       '<h4 style="margin:0 0 10px;font-size:14px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;">Productos (' + cart.length + ')</h4>' +
-      '<div class="table-responsive"><table class="data-table"><thead><tr><th>Codigo</th><th>Producto</th><th>Cant.</th><th>P. Unit.</th><th>Subtotal</th></tr></thead><tbody>';
+      '<div class="table-responsive"><table class="data-table"><thead><tr><th>Codigo</th><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">Precio</th><th style="text-align:center;">% Dct.</th><th style="text-align:right;">Total</th></tr></thead><tbody>';
     cart.forEach(function (item) {
-      html += '<tr><td>' + escapeHtml(String(item.codigo)) + '</td><td>' + escapeHtml(item.nombre) + '</td><td>' + item.cantidad + '</td><td>' + formatCLP(item.precio) + '</td><td>' + formatCLP(item.precio * item.cantidad) + '</td></tr>';
+      var bruto = item.precio * item.cantidad;
+      var desc = item.descuento || 0;
+      var itemTotal = Math.round(bruto * (1 - desc / 100));
+      subtotalBruto += bruto;
+      totalConDesc += itemTotal;
+      html += '<tr><td>' + escapeHtml(String(item.codigo)) + '</td><td>' + escapeHtml(item.nombre) + '</td><td style="text-align:center;">' + item.cantidad + '</td><td style="text-align:right;">' + formatCLP(item.precio) + '</td><td style="text-align:center;' + (desc > 0 ? 'color:#ef4444;font-weight:600;' : '') + '">' + (desc > 0 ? '-' + desc + '%' : '-') + '</td><td style="text-align:right;font-weight:600;">' + formatCLP(itemTotal) + '</td></tr>';
     });
     html += '</tbody></table></div></div>';
 
+    var hayDescuento = subtotalBruto !== totalConDesc;
+
     // Totals
     html += '<div style="background:#f8fafc;border-radius:8px;padding:16px;">';
-    html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;"><span>Subtotal:</span><span>' + formatCLP(subtotal) + '</span></div>';
-    if (descuentoData.valor > 0) {
-      html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;color:#ef4444;"><span>Descuento (' + (descuentoData.tipo === 'porcentaje' ? descuentoData.valor + '%' : formatCLP(descuentoData.valor)) + '):</span><span>-' + formatCLP(descuentoMonto) + '</span></div>';
+    if (hayDescuento) {
+      html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;"><span>Subtotal:</span><span>' + formatCLP(subtotalBruto) + '</span></div>';
+      html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;color:#ef4444;"><span>Descuento:</span><span>-' + formatCLP(subtotalBruto - totalConDesc) + '</span></div>';
     }
-    html += '<div style="display:flex;justify-content:space-between;font-size:22px;font-weight:700;color:#1e293b;padding-top:8px;border-top:2px solid #e2e8f0;"><span>TOTAL:</span><span>' + formatCLP(total) + '</span></div>';
+    html += '<div style="display:flex;justify-content:space-between;font-size:22px;font-weight:700;color:#1e293b;padding-top:8px;border-top:2px solid #e2e8f0;"><span>TOTAL:</span><span>' + formatCLP(totalConDesc) + '</span></div>';
     html += '</div>';
 
-    if (descuentoData.valor > 0) {
-      html += '<div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:8px;font-size:13px;color:#92400e;"><strong>Nota:</strong> Esta cotizacion incluye descuento y sera enviada para aprobacion antes de poder ser emitida.</div>';
+    if (hayDescuento) {
+      html += '<div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:8px;font-size:13px;color:#92400e;"><strong>Nota:</strong> Esta cotizacion incluye descuento y sera enviada para aprobacion del Gerente antes de poder ser emitida.</div>';
     }
 
     return html;
@@ -1131,26 +1142,15 @@
         showToast('Agregue al menos un producto.', 'error');
         return;
       }
-      // Save discount data from step 2
-      var tipoEl = document.getElementById('wz-desc-tipo');
-      var valorEl = document.getElementById('wz-desc-valor');
+      // Save discount justification from step 2
       var justEl = document.getElementById('wz-desc-justificacion');
-      descuentoData.tipo = tipoEl ? tipoEl.value : 'porcentaje';
-      descuentoData.valor = valorEl ? (parseFloat(valorEl.value) || 0) : 0;
       descuentoData.justificacion = justEl ? justEl.value.trim() : '';
 
-      if (descuentoData.valor > 0) {
-        var config = getConfig();
-        var subtotal = cart.reduce(function (s, item) { return s + item.precio * item.cantidad; }, 0);
-        var pct = descuentoData.tipo === 'porcentaje' ? descuentoData.valor : (descuentoData.valor / subtotal * 100);
-        if (pct > config.descuento_maximo) {
-          showToast('El descuento excede el maximo permitido (' + config.descuento_maximo + '%).', 'error');
-          return;
-        }
-        if (!descuentoData.justificacion) {
-          showToast('Debe ingresar una justificacion para el descuento.', 'error');
-          return;
-        }
+      // Check if any item has discount - require justification
+      var hayDescuento = cart.some(function(item) { return (item.descuento || 0) > 0; });
+      if (hayDescuento && !descuentoData.justificacion) {
+        showToast('Debe ingresar una justificación para el descuento.', 'error');
+        return;
       }
     }
 
@@ -1166,11 +1166,7 @@
   function wizardPrev() {
     // Save current step data before going back
     if (wizardStep === 2) {
-      var tipoEl = document.getElementById('wz-desc-tipo');
-      var valorEl = document.getElementById('wz-desc-valor');
       var justEl = document.getElementById('wz-desc-justificacion');
-      if (tipoEl) descuentoData.tipo = tipoEl.value;
-      if (valorEl) descuentoData.valor = parseFloat(valorEl.value) || 0;
       if (justEl) descuentoData.justificacion = justEl.value.trim();
     }
     wizardStep--;
@@ -1278,9 +1274,32 @@
     updateCartDisplay();
   }
 
+  function setItemDiscount(index, value) {
+    if (index < 0 || index >= cart.length) return;
+    var config = getConfig();
+    var pct = parseFloat(value) || 0;
+    if (pct < 0) pct = 0;
+    if (pct > config.descuento_maximo) {
+      pct = config.descuento_maximo;
+      showToast('Descuento máximo permitido: ' + config.descuento_maximo + '%', 'error');
+    }
+    cart[index].descuento = pct;
+    updateCartDisplay();
+  }
+
   function updateCartDisplay() {
     var cartDiv = document.getElementById('wz-cart');
     if (cartDiv) cartDiv.innerHTML = renderCartHtml();
+    // Re-render justification field if needed
+    var container = document.getElementById('page-nueva-cotizacion');
+    if (container && wizardStep === 2) {
+      var justDiv = document.getElementById('wz-desc-justificacion');
+      if (!justDiv && cart.some(function(item) { return (item.descuento || 0) > 0; })) {
+        // Need to re-render the whole step to show justification
+        renderWizard();
+        setupProductSearch();
+      }
+    }
   }
 
   function createQuotation() {
@@ -1288,28 +1307,31 @@
     var config = getConfig();
     var cotizaciones = getCotizaciones();
 
-    var subtotal = cart.reduce(function (s, item) { return s + item.precio * item.cantidad; }, 0);
-    var descuentoMonto = 0;
-    if (descuentoData.valor > 0) {
-      descuentoMonto = descuentoData.tipo === 'porcentaje' ? Math.round(subtotal * descuentoData.valor / 100) : descuentoData.valor;
-    }
-    var total = Math.max(0, subtotal - descuentoMonto);
-
-    var fechaValidez = new Date();
-    fechaValidez.setDate(fechaValidez.getDate() + config.validez_dias);
-
-    var hasDiscount = descuentoData.valor > 0;
-    var estado = hasDiscount ? 'pendiente' : 'borrador';
-
+    var subtotalBruto = 0;
+    var totalConDesc = 0;
     var items = cart.map(function (item) {
+      var bruto = item.precio * item.cantidad;
+      var desc = item.descuento || 0;
+      var itemTotal = Math.round(bruto * (1 - desc / 100));
+      subtotalBruto += bruto;
+      totalConDesc += itemTotal;
       return {
         producto_codigo: item.codigo,
         producto_nombre: item.nombre,
         cantidad: item.cantidad,
         precio_unitario: item.precio,
-        subtotal: item.precio * item.cantidad
+        descuento_pct: desc,
+        subtotal: itemTotal
       };
     });
+
+    var descuentoMonto = subtotalBruto - totalConDesc;
+    var hasDiscount = descuentoMonto > 0;
+
+    var fechaValidez = new Date();
+    fechaValidez.setDate(fechaValidez.getDate() + config.validez_dias);
+
+    var estado = hasDiscount ? 'pendiente' : 'borrador';
 
     if (editingCotizacionId) {
       // Update existing
@@ -1324,11 +1346,11 @@
         cot.cliente_comuna = clienteData.comuna;
         cot.cliente_giro = clienteData.giro;
         cot.items = items;
-        cot.subtotal = subtotal;
-        cot.descuento_tipo = descuentoData.tipo;
-        cot.descuento_valor = descuentoData.valor;
+        cot.subtotal = subtotalBruto;
+        cot.descuento_tipo = 'porcentaje';
+        cot.descuento_valor = descuentoMonto;
         cot.descuento_justificacion = descuentoData.justificacion;
-        cot.total = total;
+        cot.total = totalConDesc;
         cot.estado = estado;
         saveCotizacion(cot);
         showToast('Cotizacion actualizada exitosamente.', 'success');
@@ -1355,11 +1377,11 @@
       sucursal_id: session.sucursal_id,
       estado: estado,
       items: items,
-      subtotal: subtotal,
-      descuento_tipo: descuentoData.tipo,
-      descuento_valor: descuentoData.valor,
+      subtotal: subtotalBruto,
+      descuento_tipo: 'porcentaje',
+      descuento_valor: descuentoMonto,
       descuento_justificacion: descuentoData.justificacion,
-      total: total,
+      total: totalConDesc,
       aprobado_por: null,
       motivo_rechazo: null,
       fecha_envio: null
@@ -2368,6 +2390,7 @@
     createQuotation: createQuotation,
     updateQuantity: updateQuantity,
     setQuantity: setQuantity,
+    setItemDiscount: setItemDiscount,
     removeFromCart: removeFromCart,
     updateDescuentoPreview: updateDescuentoPreview,
 
