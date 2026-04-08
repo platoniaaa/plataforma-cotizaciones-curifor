@@ -861,7 +861,7 @@
     var container = document.getElementById('page-nueva-cotizacion');
     if (!container) return;
 
-    var steps = ['Datos del Cliente', 'Productos', 'Descuento', 'Confirmacion'];
+    var steps = ['Datos del Cliente', 'Productos y Descuento', 'Confirmacion'];
     var html = '<div class="card">';
 
     // Step indicators
@@ -878,12 +878,11 @@
     }
     html += '</div>';
 
-    // Step content
+    // Step content (3 steps: 1=Client, 2=Products+Discount, 3=Confirm)
     switch (wizardStep) {
       case 1: html += renderWizardStep1(); break;
       case 2: html += renderWizardStep2(); break;
-      case 3: html += renderWizardStep3(); break;
-      case 4: html += renderWizardStep4(); break;
+      case 3: html += renderWizardStep4(); break;
     }
 
     // Navigation buttons
@@ -893,9 +892,9 @@
     } else {
       html += '<div></div>';
     }
-    if (wizardStep < 4) {
+    if (wizardStep < 3) {
       html += '<button class="btn btn-primary" onclick="window.CuriforApp.wizardNext()">Siguiente</button>';
-    } else {
+    } else if (wizardStep === 3) {
       html += '<button class="btn btn-primary" style="background:#10b981;" onclick="window.CuriforApp.createQuotation()">' + (editingCotizacionId ? 'Guardar Cambios' : 'Crear Cotizacion') + '</button>';
     }
     html += '</div></div>';
@@ -918,6 +917,9 @@
   }
 
   function renderWizardStep2() {
+    var subtotal = cart.reduce(function (s, item) { return s + item.precio * item.cantidad; }, 0);
+    var config = getConfig();
+
     var html = '<h3 style="margin:0 0 20px;font-size:16px;color:#1e293b;">Agregar Productos</h3>';
 
     // Product search
@@ -932,6 +934,29 @@
 
     // Cart table
     html += '<div id="wz-cart">' + renderCartHtml() + '</div>';
+
+    // Discount section (inline, below cart)
+    if (cart.length > 0) {
+      html += '<div style="margin-top:24px;padding:20px;background:#f0f4ff;border-radius:12px;border:1px solid #c7d2fe;">';
+      html += '<h4 style="margin:0 0 16px;font-size:15px;color:#1e293b;display:flex;align-items:center;gap:8px;">🏷️ Descuento (Opcional)</h4>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;align-items:end;">' +
+        '<div><label class="form-label" style="font-size:12px;">Tipo</label>' +
+        '<select id="wz-desc-tipo" class="form-input" style="padding:8px 10px;" onchange="window.CuriforApp.updateDescuentoPreview()">' +
+        '<option value="porcentaje"' + (descuentoData.tipo === 'porcentaje' ? ' selected' : '') + '>Porcentaje (%)</option>' +
+        '<option value="monto_fijo"' + (descuentoData.tipo === 'monto_fijo' ? ' selected' : '') + '>Monto Fijo ($)</option>' +
+        '</select></div>' +
+        '<div><label class="form-label" style="font-size:12px;">Valor <span style="color:#94a3b8;">(máx ' + config.descuento_maximo + '%)</span></label>' +
+        '<input type="number" id="wz-desc-valor" class="form-input" style="padding:8px 10px;" value="' + (descuentoData.valor || '') + '" min="0" placeholder="0" oninput="window.CuriforApp.updateDescuentoPreview()"></div>' +
+        '<div><label class="form-label" style="font-size:12px;">Justificación</label>' +
+        '<input type="text" id="wz-desc-justificacion" class="form-input" style="padding:8px 10px;" value="' + escapeHtml(descuentoData.justificacion || '') + '" placeholder="Motivo del descuento..."></div>' +
+        '</div>';
+
+      // Totals preview
+      html += '<div id="wz-desc-preview" style="margin-top:16px;padding:14px;background:#fff;border-radius:8px;">';
+      html += calculateDescuentoPreviewHtml(subtotal);
+      html += '</div>';
+      html += '</div>';
+    }
 
     return html;
   }
@@ -1106,7 +1131,7 @@
         showToast('Agregue al menos un producto.', 'error');
         return;
       }
-    } else if (wizardStep === 3) {
+      // Save discount data from step 2
       var tipoEl = document.getElementById('wz-desc-tipo');
       var valorEl = document.getElementById('wz-desc-valor');
       var justEl = document.getElementById('wz-desc-justificacion');
@@ -1140,7 +1165,7 @@
 
   function wizardPrev() {
     // Save current step data before going back
-    if (wizardStep === 3) {
+    if (wizardStep === 2) {
       var tipoEl = document.getElementById('wz-desc-tipo');
       var valorEl = document.getElementById('wz-desc-valor');
       var justEl = document.getElementById('wz-desc-justificacion');
