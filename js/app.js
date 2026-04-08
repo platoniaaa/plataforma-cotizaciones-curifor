@@ -40,9 +40,17 @@
   ];
 
   var DEFAULT_SUCURSALES = [
-    { id: 1, nombre: 'Casa Matriz', direccion: 'Av. Principal 1234, Santiago', telefono: '+56 2 2345 6789', email: 'casamatriz@curifor.cl', activa: true },
-    { id: 2, nombre: 'Sucursal Norte', direccion: 'Calle Norte 567, Antofagasta', telefono: '+56 55 234 5678', email: 'norte@curifor.cl', activa: true },
-    { id: 3, nombre: 'Sucursal Sur', direccion: 'Av. Sur 890, Concepcion', telefono: '+56 41 234 5678', email: 'sur@curifor.cl', activa: true }
+    { id: 1, codigo: 'SUC001', nombre: 'Santiago - Mackenna', direccion: 'Av. V. Mackenna Oriente # 5951', ciudad: 'Santiago', telefono: 'Fono 3919000 - 2943001', fax: 'FAX 2839408 - 3799463', activa: true },
+    { id: 2, codigo: 'SUC002', nombre: 'Santiago - 10 de Julio', direccion: '10 de julio 1485', ciudad: 'Santiago', telefono: 'Fono 6965135', fax: 'FAX 6972553', activa: true },
+    { id: 3, codigo: 'SUC003', nombre: 'Santiago - Irarrázaval', direccion: 'Irarrázaval N°357', ciudad: 'Santiago', telefono: 'Fono 2041656', fax: 'FAX 2692356', activa: true },
+    { id: 4, codigo: 'SUC004', nombre: 'Santiago - Lira', direccion: 'Lira N°689', ciudad: 'Santiago', telefono: 'Fono 6348057', fax: 'FAX 6341445', activa: true },
+    { id: 5, codigo: 'SUC005', nombre: 'Linares', direccion: 'Longitudinal Sur -KM 35 N°3502', ciudad: 'Linares', telefono: 'Fono 8215400', fax: 'FAX 8212241', activa: true },
+    { id: 6, codigo: 'SUC006', nombre: 'Rancagua', direccion: 'Longitudinal Sur -N°0455', ciudad: 'Rancagua', telefono: 'Fono 240201', fax: 'FAX 245378', activa: true },
+    { id: 7, codigo: 'SUC007', nombre: 'San Fernando', direccion: 'Av.B.O\' Higgins N°038', ciudad: 'San Fernando', telefono: 'Fono 721950', fax: 'FAX 714479', activa: true },
+    { id: 8, codigo: 'SUC008', nombre: 'Curicó', direccion: 'Longitudinal Sur -KM 186.5', ciudad: 'Curicó', telefono: 'Fono 384000', fax: 'FAX 384046', activa: true },
+    { id: 9, codigo: 'SUC009', nombre: 'Talca', direccion: '1 Norte N°2153', ciudad: 'Talca', telefono: 'Fono 242859', fax: 'FAX 243205', activa: true },
+    { id: 10, codigo: 'SUC010', nombre: 'Chillán', direccion: 'Av.Brasil N°954', ciudad: 'Chillán', telefono: 'Fono 223104', fax: 'FAX 215216', activa: true },
+    { id: 11, codigo: 'SUC011', nombre: 'Coquimbo', direccion: 'Camino Longitudinal - Ruta 5 Norte', ciudad: 'Coquimbo', telefono: 'Fono 8215400', fax: 'FAX 8212241', activa: true }
   ];
 
   var DEFAULT_CONFIG = {
@@ -787,7 +795,11 @@
           nombre: orig.cliente_nombre,
           rut: orig.cliente_rut,
           email: orig.cliente_email,
-          telefono: orig.cliente_telefono
+          telefono: orig.cliente_telefono,
+          direccion: orig.cliente_direccion || '',
+          ciudad: orig.cliente_ciudad || '',
+          comuna: orig.cliente_comuna || '',
+          giro: orig.cliente_giro || ''
         };
         cart = orig.items.map(function (item) {
           return {
@@ -812,7 +824,11 @@
           nombre: cot.cliente_nombre,
           rut: cot.cliente_rut,
           email: cot.cliente_email,
-          telefono: cot.cliente_telefono
+          telefono: cot.cliente_telefono,
+          direccion: cot.cliente_direccion || '',
+          ciudad: cot.cliente_ciudad || '',
+          comuna: cot.cliente_comuna || '',
+          giro: cot.cliente_giro || ''
         };
         cart = cot.items.map(function (item) {
           return {
@@ -886,10 +902,14 @@
   function renderWizardStep1() {
     return '<h3 style="margin:0 0 20px;font-size:16px;color:#1e293b;">Datos del Cliente</h3>' +
       '<div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">' +
-      '<div><label class="form-label">Nombre / Razon Social *</label><input type="text" id="wz-cliente-nombre" class="form-input" value="' + escapeHtml(clienteData.nombre || '') + '" placeholder="Nombre del cliente"></div>' +
+      '<div><label class="form-label">Nombre / Razón Social *</label><input type="text" id="wz-cliente-nombre" class="form-input" value="' + escapeHtml(clienteData.nombre || '') + '" placeholder="Nombre del cliente"></div>' +
       '<div><label class="form-label">RUT</label><input type="text" id="wz-cliente-rut" class="form-input" value="' + escapeHtml(clienteData.rut || '') + '" placeholder="12.345.678-9"></div>' +
       '<div><label class="form-label">Email</label><input type="email" id="wz-cliente-email" class="form-input" value="' + escapeHtml(clienteData.email || '') + '" placeholder="cliente@empresa.cl"></div>' +
-      '<div><label class="form-label">Telefono</label><input type="text" id="wz-cliente-telefono" class="form-input" value="' + escapeHtml(clienteData.telefono || '') + '" placeholder="+56 9 1234 5678"></div>' +
+      '<div><label class="form-label">Teléfono</label><input type="text" id="wz-cliente-telefono" class="form-input" value="' + escapeHtml(clienteData.telefono || '') + '" placeholder="+56 9 1234 5678"></div>' +
+      '<div style="grid-column:1/-1;"><label class="form-label">Dirección</label><input type="text" id="wz-cliente-direccion" class="form-input" value="' + escapeHtml(clienteData.direccion || '') + '" placeholder="Dirección del cliente"></div>' +
+      '<div><label class="form-label">Ciudad</label><input type="text" id="wz-cliente-ciudad" class="form-input" value="' + escapeHtml(clienteData.ciudad || '') + '" placeholder="Ciudad"></div>' +
+      '<div><label class="form-label">Comuna</label><input type="text" id="wz-cliente-comuna" class="form-input" value="' + escapeHtml(clienteData.comuna || '') + '" placeholder="Comuna"></div>' +
+      '<div><label class="form-label">Giro</label><input type="text" id="wz-cliente-giro" class="form-input" value="' + escapeHtml(clienteData.giro || '') + '" placeholder="Giro comercial"></div>' +
       '</div>';
   }
 
@@ -1019,7 +1039,11 @@
       '<div><strong>Nombre:</strong> ' + escapeHtml(clienteData.nombre || '-') + '</div>' +
       '<div><strong>RUT:</strong> ' + escapeHtml(clienteData.rut || '-') + '</div>' +
       '<div><strong>Email:</strong> ' + escapeHtml(clienteData.email || '-') + '</div>' +
-      '<div><strong>Telefono:</strong> ' + escapeHtml(clienteData.telefono || '-') + '</div>' +
+      '<div><strong>Teléfono:</strong> ' + escapeHtml(clienteData.telefono || '-') + '</div>' +
+      '<div><strong>Dirección:</strong> ' + escapeHtml(clienteData.direccion || '-') + '</div>' +
+      '<div><strong>Ciudad:</strong> ' + escapeHtml(clienteData.ciudad || '-') + '</div>' +
+      '<div><strong>Comuna:</strong> ' + escapeHtml(clienteData.comuna || '-') + '</div>' +
+      '<div><strong>Giro:</strong> ' + escapeHtml(clienteData.giro || '-') + '</div>' +
       '</div></div>';
 
     // Info
@@ -1069,6 +1093,10 @@
       clienteData.rut = (document.getElementById('wz-cliente-rut') || {}).value || '';
       clienteData.email = (document.getElementById('wz-cliente-email') || {}).value || '';
       clienteData.telefono = (document.getElementById('wz-cliente-telefono') || {}).value || '';
+      clienteData.direccion = (document.getElementById('wz-cliente-direccion') || {}).value || '';
+      clienteData.ciudad = (document.getElementById('wz-cliente-ciudad') || {}).value || '';
+      clienteData.comuna = (document.getElementById('wz-cliente-comuna') || {}).value || '';
+      clienteData.giro = (document.getElementById('wz-cliente-giro') || {}).value || '';
     } else if (wizardStep === 2) {
       if (cart.length === 0) {
         showToast('Agregue al menos un producto.', 'error');
@@ -1262,6 +1290,10 @@
         cot.cliente_rut = clienteData.rut;
         cot.cliente_email = clienteData.email;
         cot.cliente_telefono = clienteData.telefono;
+        cot.cliente_direccion = clienteData.direccion;
+        cot.cliente_ciudad = clienteData.ciudad;
+        cot.cliente_comuna = clienteData.comuna;
+        cot.cliente_giro = clienteData.giro;
         cot.items = items;
         cot.subtotal = subtotal;
         cot.descuento_tipo = descuentoData.tipo;
@@ -1286,6 +1318,10 @@
       cliente_rut: clienteData.rut,
       cliente_email: clienteData.email,
       cliente_telefono: clienteData.telefono,
+      cliente_direccion: clienteData.direccion,
+      cliente_ciudad: clienteData.ciudad,
+      cliente_comuna: clienteData.comuna,
+      cliente_giro: clienteData.giro,
       vendedor_id: session.id,
       sucursal_id: session.sucursal_id,
       estado: estado,
@@ -1378,7 +1414,10 @@
       '<div><strong>Nombre:</strong> ' + escapeHtml(cot.cliente_nombre) + '</div>' +
       '<div><strong>RUT:</strong> ' + escapeHtml(cot.cliente_rut || '-') + '</div>' +
       '<div><strong>Email:</strong> ' + escapeHtml(cot.cliente_email || '-') + '</div>' +
-      '<div><strong>Telefono:</strong> ' + escapeHtml(cot.cliente_telefono || '-') + '</div>' +
+      '<div><strong>Teléfono:</strong> ' + escapeHtml(cot.cliente_telefono || '-') + '</div>' +
+      '<div><strong>Dirección:</strong> ' + escapeHtml(cot.cliente_direccion || '-') + '</div>' +
+      '<div><strong>Ciudad:</strong> ' + escapeHtml(cot.cliente_ciudad || '-') + ' / <strong>Comuna:</strong> ' + escapeHtml(cot.cliente_comuna || '-') + '</div>' +
+      '<div><strong>Giro:</strong> ' + escapeHtml(cot.cliente_giro || '-') + '</div>' +
       '</div></div>';
 
     html += '<div style="background:#f8fafc;border-radius:8px;padding:16px;">' +
@@ -1457,82 +1496,154 @@
   }
 
   function generatePrintHTML(cot, config, vendedor, sucursal) {
+    var allSucs = getSucursales();
+    var descPct = 0;
     var descMonto = 0;
     if (cot.descuento_valor && cot.descuento_valor > 0) {
+      descPct = cot.descuento_tipo === 'porcentaje' ? cot.descuento_valor : 0;
       descMonto = cot.descuento_tipo === 'porcentaje' ? Math.round(cot.subtotal * cot.descuento_valor / 100) : cot.descuento_valor;
     }
 
+    var neto = cot.total;
+    var iva = Math.round(neto * 0.19);
+    var totalConIva = neto + iva;
+
+    var fechaCot = new Date(cot.fecha_creacion);
+    var fechaStr = String(fechaCot.getDate()).padStart(2,'0') + '-' + String(fechaCot.getMonth()+1).padStart(2,'0') + '-' + fechaCot.getFullYear();
+    var horaStr = String(fechaCot.getHours()).padStart(2,'0') + ':' + String(fechaCot.getMinutes()).padStart(2,'0') + ':' + String(fechaCot.getSeconds()).padStart(2,'0');
+
+    // Build sucursales directory for header
+    var sucDir = '';
+    allSucs.forEach(function(s) {
+      if (s.activa !== false) {
+        sucDir += '<tr><td style="padding:0 4px;white-space:nowrap;">' + escapeHtml(s.ciudad || s.nombre) + ':</td>' +
+          '<td style="padding:0 4px;">' + escapeHtml(s.direccion) + '</td>' +
+          '<td style="padding:0 4px;">' + escapeHtml(s.telefono || '') + '</td>' +
+          '<td style="padding:0 4px;">' + escapeHtml(s.fax || '') + '</td></tr>';
+      }
+    });
+
+    // Build product rows with individual discount
     var itemsRows = '';
-    (cot.items || []).forEach(function (item, idx) {
+    (cot.items || []).forEach(function (item) {
+      var itemDesc = descPct || 0;
+      var itemTotal = Math.round(item.subtotal * (1 - Math.abs(itemDesc) / 100));
       itemsRows += '<tr>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;">' + (idx + 1) + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;">' + escapeHtml(String(item.producto_codigo)) + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;">' + escapeHtml(item.producto_nombre) + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;text-align:center;">' + item.cantidad + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;text-align:right;">' + formatCLP(item.precio_unitario) + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;text-align:right;">' + formatCLP(item.subtotal) + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid #ccc;font-size:11px;">' + escapeHtml(item.producto_nombre) + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid #ccc;font-size:11px;text-align:center;">' + Number(item.cantidad).toFixed(2) + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid #ccc;font-size:11px;text-align:right;">' + formatCLPNumber(item.precio_unitario) + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid #ccc;font-size:11px;text-align:right;">' + (itemDesc ? '-' + Math.abs(itemDesc).toFixed(2) : '') + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid #ccc;font-size:11px;text-align:right;">' + formatCLPNumber(itemTotal) + '</td>' +
         '</tr>';
     });
 
-    var discountRow = '';
-    if (cot.descuento_valor && cot.descuento_valor > 0) {
-      discountRow = '<tr><td colspan="4"></td><td style="padding:6px 12px;font-size:13px;color:#dc2626;">Descuento (' + (cot.descuento_tipo === 'porcentaje' ? cot.descuento_valor + '%' : formatCLP(cot.descuento_valor)) + '):</td><td style="padding:6px 12px;text-align:right;font-size:13px;color:#dc2626;">-' + formatCLP(descMonto) + '</td></tr>';
-    }
-
     return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Cotizacion ' + escapeHtml(cot.numero_cotizacion) + '</title>' +
-      '<style>@page{margin:20mm 15mm;}body{font-family:Arial,Helvetica,sans-serif;color:#1e293b;line-height:1.5;margin:0;padding:30px;}' +
-      '@media print{body{padding:0;}}</style></head><body>' +
+      '<style>' +
+      '@page { margin: 10mm; }' +
+      'body { font-family: Arial, Helvetica, sans-serif; color: #000; margin: 0; padding: 15px; font-size: 11px; }' +
+      'table { border-collapse: collapse; }' +
+      '@media print { body { padding: 0; } }' +
+      '</style></head><body>' +
 
-      // Header
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;padding-bottom:20px;border-bottom:3px solid #1e3a5f;">' +
-      '<div><div style="font-size:32px;font-weight:800;color:#1e3a5f;letter-spacing:1px;">CURIFOR</div>' +
-      '<div style="font-size:12px;color:#64748b;margin-top:4px;">Repuestos y Autopartes</div></div>' +
-      '<div style="text-align:right;font-size:12px;color:#64748b;">' +
-      (sucursal ? escapeHtml(sucursal.nombre) + '<br>' + escapeHtml(sucursal.direccion) + '<br>' + escapeHtml(sucursal.telefono) + '<br>' + escapeHtml(sucursal.email) : '') +
-      '</div></div>' +
+      // ===== HEADER: Logo + Sucursales Directory =====
+      '<table style="width:100%;margin-bottom:8px;">' +
+      '<tr><td style="width:200px;vertical-align:top;">' +
+      '<div style="font-size:28px;font-weight:900;color:#002B7F;font-style:italic;letter-spacing:2px;border:2px solid #c0392b;border-radius:8px;padding:4px 12px;display:inline-block;">' +
+      '<span style="color:#c0392b;">C</span>URIFOR</div>' +
+      '</td>' +
+      '<td style="vertical-align:top;">' +
+      '<table style="font-size:8px;line-height:1.3;color:#333;">' + sucDir + '</table>' +
+      '</td></tr></table>' +
 
-      // Quote info
-      '<div style="display:flex;justify-content:space-between;margin-bottom:30px;">' +
-      '<div style="background:#f8fafc;padding:16px;border-radius:6px;flex:1;margin-right:16px;">' +
-      '<div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Datos del Cliente</div>' +
-      '<div style="font-size:14px;font-weight:600;">' + escapeHtml(cot.cliente_nombre) + '</div>' +
-      (cot.cliente_rut ? '<div style="font-size:13px;">RUT: ' + escapeHtml(cot.cliente_rut) + '</div>' : '') +
-      (cot.cliente_email ? '<div style="font-size:13px;">Email: ' + escapeHtml(cot.cliente_email) + '</div>' : '') +
-      (cot.cliente_telefono ? '<div style="font-size:13px;">Tel: ' + escapeHtml(cot.cliente_telefono) + '</div>' : '') +
+      // ===== COTIZACION TITLE + NUMBER =====
+      '<table style="width:100%;margin-bottom:10px;">' +
+      '<tr><td style="vertical-align:top;">' +
+      '<div style="font-size:14px;font-weight:bold;color:#002B7F;">COTIZACION PTO VTA</div>' +
+      '<div style="font-size:16px;font-weight:bold;color:#002B7F;">N° ' + escapeHtml(cot.numero_cotizacion) + '</div>' +
+      '</td>' +
+      '<td style="text-align:right;font-size:11px;">' +
+      '</td></tr></table>' +
+
+      // ===== VENDEDOR / LOCAL / FECHA / HORA =====
+      '<table style="font-size:11px;margin-bottom:10px;border-bottom:1px solid #999;padding-bottom:8px;width:100%;">' +
+      '<tr><td style="width:80px;"><b>Vendedor</b></td><td>: ' + escapeHtml(vendedor ? vendedor.nombre : '-') + '</td></tr>' +
+      '<tr><td><b>Local</b></td><td>: ' + escapeHtml(sucursal ? (sucursal.codigo || sucursal.nombre) : '-') + '</td></tr>' +
+      '<tr><td><b>Fecha</b></td><td>: ' + fechaStr + '</td></tr>' +
+      '<tr><td><b>Hora</b></td><td>: ' + horaStr + '</td></tr>' +
+      '</table>' +
+
+      // ===== CLIENT DATA =====
+      '<table style="font-size:11px;margin-bottom:12px;width:100%;border-bottom:1px solid #999;padding-bottom:8px;">' +
+      '<tr><td style="width:80px;"><b>Señor(es):</b></td><td colspan="2">' + escapeHtml(cot.cliente_nombre) + '</td>' +
+      '<td style="width:60px;text-align:right;"><b>Rut:</b></td><td style="width:120px;">' + escapeHtml(cot.cliente_rut || '') + '</td></tr>' +
+      '<tr><td><b>Dirección:</b></td><td colspan="2">' + escapeHtml(cot.cliente_direccion || '') + '</td>' +
+      '<td style="text-align:right;"><b>Ciudad:</b></td><td>' + escapeHtml(cot.cliente_ciudad || '') + '</td></tr>' +
+      '<tr><td><b>Teléfono:</b></td><td>' + escapeHtml(cot.cliente_telefono || '') + '</td>' +
+      '<td><b>Fax:</b></td>' +
+      '<td style="text-align:right;"><b>Comuna:</b></td><td>' + escapeHtml(cot.cliente_comuna || '') + '</td></tr>' +
+      '<tr><td><b>Email:</b></td><td colspan="4">' + escapeHtml(cot.cliente_email || '') + '</td></tr>' +
+      '<tr><td><b>Giro:</b></td><td colspan="4">' + escapeHtml(cot.cliente_giro || 'REPUESTOS PARA VEHICULOS') + '</td></tr>' +
+      '</table>' +
+
+      // ===== PRODUCTS TABLE =====
+      '<table style="width:100%;margin-bottom:6px;">' +
+      '<thead><tr style="background:#ddd;border-top:2px solid #333;border-bottom:2px solid #333;">' +
+      '<th style="padding:5px 6px;text-align:left;font-size:11px;font-weight:bold;">DESCRIPCION</th>' +
+      '<th style="padding:5px 6px;text-align:center;font-size:11px;font-weight:bold;">CANT.</th>' +
+      '<th style="padding:5px 6px;text-align:right;font-size:11px;font-weight:bold;">PRECIO</th>' +
+      '<th style="padding:5px 6px;text-align:right;font-size:11px;font-weight:bold;">% Dct.</th>' +
+      '<th style="padding:5px 6px;text-align:right;font-size:11px;font-weight:bold;">TOTAL</th>' +
+      '</tr></thead>' +
+      '<tbody>' + itemsRows + '</tbody></table>' +
+
+      // ===== NOTA =====
+      '<div style="border:1px solid #999;padding:6px;min-height:40px;margin-bottom:12px;font-size:11px;">' +
+      '<b>NOTA:</b> ' + escapeHtml(cot.nota || '') +
       '</div>' +
-      '<div style="text-align:right;">' +
-      '<div style="font-size:20px;font-weight:700;color:#1e3a5f;margin-bottom:8px;">' + escapeHtml(cot.numero_cotizacion) + '</div>' +
-      '<div style="font-size:13px;"><strong>Fecha:</strong> ' + formatDate(cot.fecha_creacion) + '</div>' +
-      '<div style="font-size:13px;"><strong>Valida hasta:</strong> ' + formatDate(cot.fecha_validez) + '</div>' +
-      '<div style="font-size:13px;"><strong>Vendedor:</strong> ' + escapeHtml(vendedor ? vendedor.nombre : '-') + '</div>' +
-      '</div></div>' +
 
-      // Products table
-      '<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">' +
-      '<thead><tr style="background:#1e3a5f;color:#fff;">' +
-      '<th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:600;">#</th>' +
-      '<th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:600;">Codigo</th>' +
-      '<th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:600;">Producto</th>' +
-      '<th style="padding:10px 12px;text-align:center;font-size:12px;font-weight:600;">Cant.</th>' +
-      '<th style="padding:10px 12px;text-align:right;font-size:12px;font-weight:600;">P. Unitario</th>' +
-      '<th style="padding:10px 12px;text-align:right;font-size:12px;font-weight:600;">Subtotal</th>' +
-      '</tr></thead><tbody>' + itemsRows + '</tbody>' +
-      '<tfoot>' +
-      '<tr><td colspan="4"></td><td style="padding:6px 12px;font-size:13px;font-weight:600;">Subtotal:</td><td style="padding:6px 12px;text-align:right;font-size:13px;">' + formatCLP(cot.subtotal) + '</td></tr>' +
-      discountRow +
-      '<tr style="background:#f8fafc;"><td colspan="4"></td><td style="padding:10px 12px;font-size:16px;font-weight:700;color:#1e3a5f;">TOTAL:</td><td style="padding:10px 12px;text-align:right;font-size:16px;font-weight:700;color:#1e3a5f;">' + formatCLP(cot.total) + '</td></tr>' +
-      '</tfoot></table>' +
-
-      // Terms
-      '<div style="margin-top:30px;padding:16px;background:#f8fafc;border-radius:6px;border-left:4px solid #1e3a5f;">' +
-      '<div style="font-size:12px;font-weight:600;color:#1e3a5f;margin-bottom:6px;">Terminos y Condiciones</div>' +
-      '<div style="font-size:12px;color:#64748b;white-space:pre-line;">' + escapeHtml(config.terminos) + '</div></div>' +
-
-      // Footer
-      '<div style="margin-top:40px;text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:16px;">' +
-      'CURIFOR - Repuestos y Autopartes | ' + (sucursal ? escapeHtml(sucursal.direccion) + ' | ' + escapeHtml(sucursal.telefono) : '') + '</div>' +
+      // ===== FOOTER: Forma de pago + Totals =====
+      '<table style="width:100%;border-top:2px solid #333;font-size:11px;">' +
+      '<tr>' +
+      '<td style="vertical-align:top;width:60%;">' +
+      '<table style="width:100%;border-collapse:collapse;">' +
+      '<tr style="background:#ddd;border-bottom:1px solid #999;">' +
+      '<th style="padding:4px 8px;text-align:left;font-weight:bold;">Forma de pago</th>' +
+      '<th style="padding:4px 8px;text-align:center;font-weight:bold;">Fecha de Vencimiento</th>' +
+      '<th style="padding:4px 8px;text-align:center;font-weight:bold;">Monto</th>' +
+      '</tr>' +
+      '<tr>' +
+      '<td style="padding:4px 8px;">CONTADO</td>' +
+      '<td style="padding:4px 8px;text-align:center;">' + formatDate(cot.fecha_validez) + '</td>' +
+      '<td style="padding:4px 8px;text-align:right;">' + formatCLPNumber(totalConIva) + '</td>' +
+      '</tr></table>' +
+      '</td>' +
+      '<td style="vertical-align:top;width:40%;">' +
+      '<table style="width:100%;border-collapse:collapse;">' +
+      '<tr style="border-bottom:1px solid #ccc;"><td style="padding:3px 8px;font-weight:bold;">NETO</td><td style="padding:3px 8px;text-align:right;">' + formatCLPNumber(neto) + '</td></tr>' +
+      '<tr style="border-bottom:1px solid #ccc;"><td style="padding:3px 8px;font-weight:bold;">IVA</td><td style="padding:3px 8px;text-align:right;">' + formatCLPNumber(iva) + '</td></tr>' +
+      '<tr style="border-bottom:2px solid #333;"><td style="padding:3px 8px;font-weight:bold;">Total</td><td style="padding:3px 8px;text-align:right;font-weight:bold;">' + formatCLPNumber(totalConIva) + '</td></tr>' +
+      '</table>' +
+      '</td>' +
+      '</tr></table>' +
 
       '</body></html>';
+  }
+
+  // Format number without $ sign (for the print template)
+  function formatCLPNumber(number) {
+    if (number == null || isNaN(number)) return '0';
+    var n = Math.round(Number(number));
+    var negative = n < 0;
+    n = Math.abs(n);
+    var str = n.toString();
+    var result = '';
+    var count = 0;
+    for (var i = str.length - 1; i >= 0; i--) {
+      if (count > 0 && count % 3 === 0) result = '.' + result;
+      result = str[i] + result;
+      count++;
+    }
+    return (negative ? '-' : '') + result;
   }
 
   // ---------------------------------------------------------------------------
